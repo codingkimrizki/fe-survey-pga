@@ -21,7 +21,17 @@ export default [
   },
   {
     path: '/survey-form',
-    name: 'survey-form',
-    component: () => import('@/components/FormSurvey.vue'),
+    name: 'Start Survey',
+    component: () => import('@/views/survey/FormSurvey.vue'),
+  },
+  {
+    path: '/question',
+    name: 'Question',
+    component: () => import('@/views/survey/QuestionPage.vue'),
+  },
+  {
+    path: '/finish',
+    name: 'Finish',
+    component: () => import('@/views/survey/ThankYou.vue'),
   },
 ]

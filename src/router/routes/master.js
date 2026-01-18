@@ -25,9 +25,4 @@ export default [
       },
     ],
   },
-  {
-    path: '/survey-form',
-    name: 'survey-form',
-    component: () => import('@/components/FormSurvey.vue'),
-  },
 ]

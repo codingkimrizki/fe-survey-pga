@@ -114,7 +114,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         // eslint-disable-next-line no-unused-vars
         const { retype_password, ...userData } = data
-        const response = await api.post('/auth/register', userData)
+        const response = await api.post('/users/register', userData)
         if (response.status === 201) {
           notification.success({
             message: 'Success created your account',

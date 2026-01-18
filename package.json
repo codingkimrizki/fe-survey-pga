@@ -12,7 +12,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@google-translate-select/vue3": "^0.1.8",
+    "@tailwindcss/vite": "^4.1.18",
     "@vueuse/core": "^14.1.0",
     "ant-design-vue": "^4.2.5",
     "axios": "^1.7.7",
@@ -25,6 +27,7 @@
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
     "qrcode.vue": "^3.6.0",
+    "tailwindcss": "^4.1.18",
     "vue": "^3.5.11",
     "vue-echarts": "^7.0.3",
     "vue-router": "^4.4.5"
