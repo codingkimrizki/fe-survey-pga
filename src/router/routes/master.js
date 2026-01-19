@@ -16,7 +16,7 @@ export default [
         name: 'Result',
         component: () => import('@/views/master/machine/MasterMachine.vue'),
         meta: {
-          requiresAuth: false,
+          requiresAuth: true,
           roles: ['admin', 'user'],
           breadcrumb: 'Result',
           showInMenu: true,

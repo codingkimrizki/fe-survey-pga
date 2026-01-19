@@ -34,14 +34,16 @@ export const useAuthStore = defineStore('auth', {
           // this.user = data.user
           this.user = {
             id: data.user.id,
+            name: data.user.name,
             email: data.user.email,
-            role: data.user.role, // <- penting
+            role: data.user.role,
           }
           this.isAuthenticated = true
           console.log('authStore.user.role:', this.user.role)
           console.log('typeof role:', typeof this.user.role)
 
           this.accessToken = data?.accessToken
+          console.log('data.user:', data.user)
           notification.success({
             message: 'Login Success',
             description: `Welcome back, ${capitalizeEachWord(data.user?.name)}`,
@@ -59,9 +61,14 @@ export const useAuthStore = defineStore('auth', {
     // 🚪 Logout user
     async logout() {
       try {
-        await api.post('/auth/logout')
-        router.push('/login')
+        await api.post('/users/logout', null, {
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`, // tambahin "Bearer "
+          },
+        })
         this.$reset()
+        localStorage.removeItem('auth')
+        router.push('/login')
         notification.success({
           message: 'Logout Success',
           description: 'See you again',
@@ -122,6 +129,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         // eslint-disable-next-line no-unused-vars
         const { retype_password, ...userData } = data
+        console.log('Sending to backend:', userData)
         const response = await api.post('/users/register', userData)
         if (response.status === 201) {
           notification.success({

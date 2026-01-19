@@ -9,7 +9,7 @@ export async function authGuard(to, from, next) {
 
   if (to.meta.requiresAuth) {
     if (!authStore.isAuthenticated) return next({ name: 'Login' })
-    if (to.meta.roles && !to.meta.roles.includes(authStore.user?.roleName))
+    if (to.meta.roles && !to.meta.roles.includes(authStore.user?.role))
       return next({ name: 'Unauthorized' })
   }
 

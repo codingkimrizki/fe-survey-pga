@@ -10,7 +10,7 @@
         <span class="medium mb-small bold" style="padding: 8px 10px"
           >Survey Portal</span
         >
-        <a-menu-item @click="router.push({ name: 'survey-form' })">
+        <a-menu-item @click="router.push({ name: 'Start Survey' })">
           <a-flex justify="space-between">
             <span>Form</span>
           </a-flex>

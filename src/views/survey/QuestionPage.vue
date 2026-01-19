@@ -12,6 +12,7 @@
       <a-typography-title :level="2" class="!mb-1">
         Survey Questions
       </a-typography-title>
+
       <a-typography-paragraph type="secondary" class="!mb-8">
         Please answer honestly. This survey takes only a few minutes.
       </a-typography-paragraph>
@@ -24,84 +25,98 @@
         </div>
 
         <!-- QUESTIONS -->
-        <div v-else class="space-y-8">
+        <div v-else class="space-y-4">
           <div
             v-for="(q, index) in questions"
             :key="q.id_questions"
-            class="p-4 rounded-xl bg-[#fafafa]"
+            :id="`question-${q.id_questions}`"
+            class="p-4 rounded-xl space-y-4"
+            :class="[
+              'bg-[#fafafa]',
+              errors[q.id_questions]
+                ? 'border-2 border-red-500'
+                : 'border border-transparent',
+            ]"
           >
-            <!-- QUESTION TEXT -->
-            <div class="mb-4">
-              <span class="font-semibold text-gray-700">
+            <div class="flex w-full">
+              <!-- Nomor -->
+              <span class="font-semibold text-gray-700 w-6">
                 {{ index + 1 }}.
               </span>
-              <span class="ml-1 text-gray-800">
-                {{ q.question_text }}
-              </span>
+
+              <div class="flex flex-col flex-1">
+                <!-- Pertanyaan -->
+                <div class="text-gray-800 text-justify">
+                  {{ q.question_text }}
+                </div>
+
+                <div class="mt-2 w-full">
+                  <!-- Yes/No (required) -->
+                  <a-radio-group
+                    v-if="q.question_type === 'Y/N'"
+                    v-model:value="answers[q.id_questions]"
+                    :button-style="'solid'"
+                    class="flex gap-4"
+                  >
+                    <a-radio-button value="Y">Yes</a-radio-button>
+                    <a-radio-button value="N">No</a-radio-button>
+                  </a-radio-group>
+
+                  <!-- Suggestion (optional) -->
+                  <a-textarea
+                    v-else-if="q.question_type === 'suggest'"
+                    v-model:value="answers[q.id_questions]"
+                    :rows="isMobile ? 3 : 4"
+                    placeholder="Write your suggestion here..."
+                    class="w-full resize-none mt-2"
+                  />
+
+                  <!-- Fallback -->
+                  <span v-else class="text-gray-400 italic mt-2">
+                    Unsupported question type
+                  </span>
+                </div>
+
+                <!-- Error message untuk Yes/No -->
+                <span
+                  v-if="errors[q.id_questions]"
+                  class="text-red-500 text-sm mt-1"
+                >
+                  This question is required
+                </span>
+              </div>
             </div>
-
-            <!-- ANSWER -->
-            <!-- YES / NO -->
-            <a-radio-group
-              v-if="q.question_type === 'Y/N'"
-              v-model:value="answers[q.id_questions]"
-              :button-style="'solid'"
-              class="flex"
-              :class="isMobile ? 'flex-col gap-3' : 'gap-4'"
-            >
-              <a-radio-button value="Y" class="text-center">
-                Yes
-              </a-radio-button>
-              <a-radio-button value="N" class="text-center">
-                No
-              </a-radio-button>
-            </a-radio-group>
-
-            <!-- SUGGESTION -->
-            <a-textarea
-              v-else-if="q.question_type === 'suggest'"
-              v-model:value="answers[q.id_questions]"
-              :rows="isMobile ? 3 : 4"
-              placeholder="Write your suggestion here..."
-            />
-
-            <!-- FALLBACK -->
-            <span v-else class="text-gray-400 italic">
-              Unsupported question type
-            </span>
           </div>
         </div>
       </a-card>
 
       <!-- NAVIGATION -->
       <div class="mt-6 flex justify-center gap-3">
-        <!-- <a-button
-        @click="backToWelcome"
-        >
-          ← Back
-        </a-button> -->
-
-        <a-button type="primary" @click="submitSurvey"> Submit </a-button>
+        <a-button type="primary" @click="submitSurvey">Submit</a-button>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
-import axios from 'axios'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+import { message } from 'ant-design-vue'
 
 const router = useRouter()
-
 const questions = ref([])
 const answers = reactive({})
+const errors = reactive({})
 const loading = ref(false)
 const isMobile = ref(false)
 
+// detect mobile
 const checkIsMobile = () => {
   isMobile.value = window.innerWidth < 640
 }
 
+// fetch questions dari backend
 const fetchQuestions = async () => {
   loading.value = true
   try {
@@ -109,28 +124,45 @@ const fetchQuestions = async () => {
     questions.value = res.data.data || res.data
 
     questions.value.forEach(q => {
-      if (q.id_questions !== undefined) {
-        answers[q.id_questions] = null
-      } else {
-        console.warn('Question missing id_questions:', q)
-      }
+      answers[q.id_questions] = null
+      errors[q.id_questions] = false
     })
-
-    console.log('QUESTIONS:', questions.value)
   } catch (err) {
-    console.error('FETCH ERROR:', err)
+    console.error(err)
   } finally {
     loading.value = false
   }
 }
 
-// const backToWelcome = () => {
-//   // submit data ke backend
-//   router.push({ name: 'Start Survey' })
-// }
-
+// submit survey
 const submitSurvey = () => {
-  // submit data ke backend
+  let hasError = false
+
+  // reset errors
+  Object.keys(errors).forEach(key => (errors[key] = false))
+
+  // cek pertanyaan Yes/No
+  questions.value.forEach(q => {
+    if (q.question_type === 'Y/N' && !answers[q.id_questions]) {
+      errors[q.id_questions] = true
+      hasError = true
+    }
+  })
+
+  if (hasError) {
+    message.error('Please answer all required Yes/No questions!')
+    // scroll ke pertanyaan pertama yang kosong
+    const firstErrorId = questions.value.find(
+      q => errors[q.id_questions],
+    ).id_questions
+    document
+      .getElementById(`question-${firstErrorId}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    return
+  }
+
+  // semua sudah diisi
+  console.log('Answers ready to submit:', answers)
   router.push({ name: 'Finish' })
 }
 
@@ -140,10 +172,9 @@ onMounted(() => {
   fetchQuestions()
 })
 
-onUnmounted(() => {
-  window.removeEventListener('resize', checkIsMobile)
-})
+onUnmounted(() => window.removeEventListener('resize', checkIsMobile))
 </script>
+
 <style scoped>
 a-radio-button {
   min-width: 120px;
