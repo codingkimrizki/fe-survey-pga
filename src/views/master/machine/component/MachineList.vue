@@ -10,7 +10,20 @@
     :loading="loading"
     :scroll="{ y: 'calc(100vh - 450px)', x: 'max-content' }"
     @change="onTableChange"
-  />
+  >
+    <!-- SLOT STATUS -->
+    <template #status="{ text }">
+      <a-button v-if="text === 'major'" type="primary" danger size="small">
+        Major
+      </a-button>
+
+      <a-button v-else-if="text === 'clear'" type="primary" size="small">
+        Clear
+      </a-button>
+
+      <span v-else>-</span>
+    </template>
+  </BaseTable>
 </template>
 
 <script setup>
@@ -31,16 +44,36 @@ const pagination = computed(() => ({
 }))
 
 const columns = [
-  { title: 'No', dataIndex: 'no', key: 'no', width: 80 },
+  {
+    title: 'No',
+    dataIndex: 'no',
+    key: 'no',
+    width: 80,
+  },
   {
     title: 'Device IP Address',
     dataIndex: 'ipAddress',
     key: 'ipAddress',
     width: 200,
   },
-  { title: 'Date', dataIndex: 'date', key: 'date', width: 120 },
-  { title: 'Time', dataIndex: 'time', key: 'time', width: 120 },
-  { title: 'Status', dataIndex: 'status', key: 'status', width: 120 },
+  {
+    title: 'Date',
+    dataIndex: 'date',
+    key: 'date',
+    width: 120,
+  },
+  {
+    title: 'Time',
+    dataIndex: 'time',
+    key: 'time',
+    width: 120,
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    width: 120,
+  },
 ]
 
 const onTableChange = async ({ pagination: pag, sorter }) => {

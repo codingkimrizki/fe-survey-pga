@@ -150,7 +150,7 @@ export const useAuthStore = defineStore('auth', {
     //  Recover password
     async resetPassword({ token, newPassword }) {
       try {
-        await api.post('/users/reset-password', {
+        await api.post('/users/resetPassword', {
           token,
           newPassword,
         })

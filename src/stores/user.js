@@ -30,7 +30,7 @@ export const useUserStore = defineStore('user', {
           sortBy: this.filter.sortBy,
           order: this.filter.order,
         }
-        const response = await api.get('/users', { params })
+        const response = await api.get('/users/allUsers', { params })
         if (response.status === 200) {
           this.userList = response.data.data.users
           this.userStat = response.data.data.roles

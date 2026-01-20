@@ -103,7 +103,7 @@ const updatePassword = async () => {
   iconLoading.value = true
   await authStore.resetPassword({
     token,
-    password: form.value.password,
+    newPassword: form.value.password,
   })
   iconLoading.value = false
 }

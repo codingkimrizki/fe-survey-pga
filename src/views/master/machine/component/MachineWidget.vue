@@ -5,7 +5,7 @@
       title="Supplier"
       :value="answersStore.getTotalIpAddress"
       :icon="SettingOutlined"
-      description="Counted visitor listed on database"
+      description="Counted supplier listed on database"
     />
     <BaseWidget
       :height="110"
