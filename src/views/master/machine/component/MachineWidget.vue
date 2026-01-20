@@ -3,14 +3,14 @@
     <BaseWidget
       :height="110"
       title="Supplier"
-      :value="machineStore.totalMachine"
+      :value="answersStore.getTotalIpAddress"
       :icon="SettingOutlined"
       description="Counted visitor listed on database"
     />
     <BaseWidget
       :height="110"
       title="Major"
-      :value="machineStore.totalMachine"
+      :value="answersStore.getTotalMajor"
       :icon="ExclamationCircleOutlined"
       description="Counted major listed on database"
     />
@@ -24,14 +24,19 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import BaseWidget from '@/components/base/BaseWidget.vue'
-import { useMachineStore } from '@/stores/machine'
+import { useAnswersStore } from '@/stores/answers'
 import {
   SettingOutlined,
   ExclamationCircleOutlined,
   AlignCenterOutlined,
 } from '@ant-design/icons-vue'
-const machineStore = useMachineStore()
+const answersStore = useAnswersStore()
+
+onMounted(() => {
+  answersStore.fetchAnswers() // ini yang ambil data dari backend
+})
 </script>
 
 <style scoped></style>

@@ -1,6 +1,6 @@
 <template>
   <BaseTable
-    :add-action="true"
+    :add-action="false"
     :bordered="true"
     v-model:search="machineStore.filter.search"
     size="small"
@@ -10,21 +10,18 @@
     :loading="loading"
     :scroll="{ y: 'calc(100vh - 450px)', x: 'max-content' }"
     @change="onTableChange"
-  >
-    <template #brand="{ text }">
-      <span class="bold">{{ text }}</span>
-    </template>
-  </BaseTable>
+  />
 </template>
 
 <script setup>
 import BaseTable from '@/components/base/BaseTable.vue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { debounce } from 'lodash-es'
-import { useMachineStore } from '@/stores/machine'
+import { useTabelAnswersStore } from '@/stores/tabelAnswers'
 
-const machineStore = useMachineStore()
+const machineStore = useTabelAnswersStore()
 const loading = ref(false)
+
 const pagination = computed(() => ({
   current: machineStore.pagination.page,
   pageSize: machineStore.pagination.pageSize,
@@ -33,77 +30,37 @@ const pagination = computed(() => ({
   pageSizeOptions: ['10', '20', '50'],
 }))
 
-const baseColumns = [
-  {
-    title: 'No',
-    dataIndex: 'id',
-    key: 'id',
-    ellipsis: true,
-    width: 100,
-    sorter: true,
-  },
+const columns = [
+  { title: 'No', dataIndex: 'no', key: 'no', width: 80 },
   {
     title: 'Device IP Address',
-    dataIndex: 'brand',
-    key: 'brand',
-    ellipsis: true,
-    sorter: true,
+    dataIndex: 'ipAddress',
+    key: 'ipAddress',
     width: 200,
   },
-  {
-    title: 'Date',
-    dataIndex: 'brand',
-    key: 'brand',
-    ellipsis: true,
-    sorter: true,
-    width: 150,
-  },
-  {
-    title: 'Time',
-    dataIndex: 'tonnage',
-    key: 'tonnage',
-    sorter: true,
-    width: 150,
-  },
-  {
-    title: 'Status',
-    dataIndex: 'updatedAt',
-    key: 'updatedAt',
-    ellipsis: true,
-    sorter: true,
-    width: 150,
-  },
+  { title: 'Date', dataIndex: 'date', key: 'date', width: 120 },
+  { title: 'Time', dataIndex: 'time', key: 'time', width: 120 },
+  { title: 'Status', dataIndex: 'status', key: 'status', width: 120 },
 ]
-
-const columns = computed(() => {
-  const cols = [...baseColumns]
-  if (machineStore.filter.showDeleted) {
-    const actionIndex = cols.findIndex(col => col.key === 'action')
-    cols.splice(actionIndex, 0)
-  }
-  return cols
-})
 
 const onTableChange = async ({ pagination: pag, sorter }) => {
   machineStore.filter.sortBy = sorter.field
   machineStore.filter.order = sorter.order === 'ascend' ? 'asc' : 'desc'
   machineStore.pagination.page = pag.current
   machineStore.pagination.pageSize = pag.pageSize
-  await machineStore.get() // fetch ulang data
+  await machineStore.get()
 }
 
 const debounceFetch = debounce(async () => {
   machineStore.pagination.page = 1
   loading.value = true
-  await machineStore.get() // fetch ulang data
+  await machineStore.get()
   loading.value = false
 }, 500)
 
 watch(
   [() => machineStore.filter.search, () => machineStore.filter.showDeleted],
-  () => {
-    debounceFetch()
-  },
+  () => debounceFetch(),
   { deep: true },
 )
 
@@ -113,5 +70,3 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
-
-<style scoped></style>

@@ -135,7 +135,7 @@ const fetchQuestions = async () => {
 }
 
 // submit survey
-const submitSurvey = () => {
+const submitSurvey = async () => {
   let hasError = false
 
   // reset errors
@@ -151,7 +151,6 @@ const submitSurvey = () => {
 
   if (hasError) {
     message.error('Please answer all required Yes/No questions!')
-    // scroll ke pertanyaan pertama yang kosong
     const firstErrorId = questions.value.find(
       q => errors[q.id_questions],
     ).id_questions
@@ -161,9 +160,24 @@ const submitSurvey = () => {
     return
   }
 
-  // semua sudah diisi
-  console.log('Answers ready to submit:', answers)
-  router.push({ name: 'Finish' })
+  // convert answers reactive object ke array
+  const answerArray = Object.entries(answers).map(([id_questions, ans]) => ({
+    questionId: Number(id_questions),
+    answer: ans,
+  }))
+
+  try {
+    loading.value = true
+    // kirim ke backend
+    await axios.post('http://localhost:5000/api/answers/submit', answerArray)
+    message.success('Survey submitted successfully!')
+    router.push({ name: 'Finish' })
+  } catch (err) {
+    console.error(err)
+    message.error('Failed to submit survey.')
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
