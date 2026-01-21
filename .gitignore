@@ -29,7 +29,7 @@ coverage
 
 *.tsbuildinfo
 # Environtment variable
-.env
+# .env
 
 *.timestamp-*.mjs
 

@@ -3,17 +3,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: riankurniawan/iot-molding-fe:latest
-    container_name: iot-molding-fe
+    image: rizkiardianto/iot-pga-survey-fe
+    container_name: iot-survey-pga-fe
     restart: always
     ports:
-      - 4173:80
+      - 4182:80
     env_file:
       - .env
     environment:
       - TZ=Asia/Jakarta
     networks:
-      - app-network
+      - rizki-app-network
 
 networks:
   app-network:

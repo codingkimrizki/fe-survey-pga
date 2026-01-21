@@ -5,6 +5,7 @@ import { message } from 'ant-design-vue'
 export const useAnswersStore = defineStore('answers', {
   state: () => ({
     answers: [],
+    questions: [],
     totalDevice: 0, // ini bakal kita update dari API
     totalIpAddress: 0,
     totalMajor: 0,
@@ -25,6 +26,10 @@ export const useAnswersStore = defineStore('answers', {
         )
         console.error(error)
       }
+    },
+    async fetchQuestions() {
+      const res = await api.get('/questions/all')
+      this.questions = res.data.data || []
     },
   },
   getters: {

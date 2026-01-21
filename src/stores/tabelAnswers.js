@@ -5,6 +5,7 @@ import { message } from 'ant-design-vue'
 export const useTabelAnswersStore = defineStore('tabelAnswers', {
   state: () => ({
     machineList: [], // 1 row = 1 IP per hari
+    questionsList: [],
     pagination: {
       page: 1,
       pageSize: 10,
@@ -18,6 +19,15 @@ export const useTabelAnswersStore = defineStore('tabelAnswers', {
     },
   }),
   actions: {
+    async fetchQuestions() {
+      try {
+        const res = await api.get('/questions/all')
+        this.questionsList = res.data.data || []
+      } catch (err) {
+        console.error(err)
+        message.error('Failed to fetch questions')
+      }
+    },
     async get() {
       try {
         const res = await api.get('/answers/all')
@@ -51,13 +61,30 @@ export const useTabelAnswersStore = defineStore('tabelAnswers', {
           })
 
           // convert ke array untuk table
-          this.machineList = Object.values(grouped).map((item, index) => ({
-            no: index + 1,
-            ipAddress: item.ipAddress,
-            date: item.date,
-            time: item.lastTime,
-            status: item.status,
-          }))
+          // this.machineList = Object.values(grouped).map((item, index) => ({
+          //   no: index + 1,
+          //   ipAddress: item.ipAddress,
+          //   date: item.date,
+          //   time: item.lastTime,
+          //   status: item.status,
+          // }))
+          this.machineList = Object.values(grouped).map((item, index) => {
+            // gabungkan date + lastTime jadi Date object UTC
+            const utcDate = new Date(item.date + 'T' + item.lastTime + 'Z') // 'Z' = UTC
+            // convert ke WIB
+            const timeWIB = utcDate.toLocaleTimeString('id-ID', {
+              hour12: false,
+              timeZone: 'Asia/Jakarta',
+            })
+
+            return {
+              no: index + 1,
+              ipAddress: item.ipAddress,
+              date: item.date, // tetap YYYY-MM-DD
+              time: timeWIB, // sudah WIB
+              status: item.status,
+            }
+          })
 
           this.pagination.total = Object.keys(grouped).length
         }

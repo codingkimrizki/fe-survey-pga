@@ -1,4 +1,4 @@
-# IoT Molding Dashboard - Frontend
+# RBA - Survey - Frontend
 
 A modern, responsive Vue 3 frontend application for monitoring and managing manufacturing processes in a injection molding company. This dashboard provides real-time data visualization, machine monitoring, and operational insights through an intuitive interface.
 
@@ -58,7 +58,7 @@ Create a `.env` file in the root directory with the following environment variab
 
 ```env
 # API Configuration
-VITE_API_BASE_URL=http://localhost:3000/api
+VITE_API_BASE_URL=http://localhost:5000/api
 VITE_API_TIMEOUT=30000
 
 # MQTT Configuration
@@ -121,9 +121,7 @@ src/
 ├── utils/                 # Utility functions
 ├── views/                 # Page components
 │   └── dashboard/         # Dashboard-specific views
-│       ├── machine/       # Machine dashboard components
-│       ├── kanagata/      # Kanagata dashboard components
-│       └── operator/      # Operator dashboard components
+│       └── Result/        # Result all data from db
 ├── App.vue                # Main application component
 └── main.js                # Application entry point
 ```
@@ -137,33 +135,6 @@ The application implements role-based access control with the following roles:
 
 Authentication is handled through the backend API with JWT tokens stored in browser storage.
 
-## 📊 Dashboard Features
-
-### Machine Dashboard
-- Realtime machine shot monitoring
-- Maintenance metrics data
-- Log action history
-- Control action support
-
-### Kanagata Dashboard
-- Realtime mold shot monitoring
-- Maintenance metrics data
-- Log action history
-- Control action support
-
-### Operator Dashboard
-- Realtime status machine for lotfull & yellow tray
-- Production support
-- Text to speech notification
-
-## 🔌 MQTT Integration
-
-The application connects to an MQTT broker to receive real-time data from manufacturing equipment:
-
-- Automatic reconnection handling
-- Topicsage routing
-- Data transformation-based mes and visualization
-- Connection status monitoring
 
 ## 🎨 Theming
 
@@ -183,9 +154,7 @@ The application supports both light and dark themes with customizable primary co
 - **TheDrawer**: Responsive drawer for mobile navigation
 
 ### Dashboard Components
-- **Machine Dashboard**: Realtime machine shot monitoring
-- **Kanagata Dashboard**: Realtime kanagata shot monitoring
-- **Operator Dashboard**: Production support for notification yellow tray & lotfull state
+- **Result Dashboard**: Realtime Result RBA Monitoring
 
 ## 🔧 Development Guidelines
 

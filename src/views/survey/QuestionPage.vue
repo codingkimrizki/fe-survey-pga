@@ -101,7 +101,7 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import api from '@/axios/interceptor'
 import { message } from 'ant-design-vue'
 
 const router = useRouter()
@@ -120,9 +120,8 @@ const checkIsMobile = () => {
 const fetchQuestions = async () => {
   loading.value = true
   try {
-    const res = await axios.get('http://localhost:5000/api/questions/all')
+    const res = await api.get('/questions/all')
     questions.value = res.data.data || res.data
-
     questions.value.forEach(q => {
       answers[q.id_questions] = null
       errors[q.id_questions] = false
@@ -162,14 +161,14 @@ const submitSurvey = async () => {
 
   // convert answers reactive object ke array
   const answerArray = Object.entries(answers).map(([id_questions, ans]) => ({
-    questionId: Number(id_questions),
+    id_questions: Number(id_questions),
     answer: ans,
   }))
 
   try {
     loading.value = true
     // kirim ke backend
-    await axios.post('http://localhost:5000/api/answers/submit', answerArray)
+    await api.post('/answers/submit', answerArray)
     message.success('Survey submitted successfully!')
     router.push({ name: 'Finish' })
   } catch (err) {

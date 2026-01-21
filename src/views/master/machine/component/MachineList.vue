@@ -37,11 +37,18 @@
       :modalTitle="modal.title"
     >
       <template #body>
-        <div style="line-height: 1.5">
-          <p><strong>IP Address:</strong> {{ modal.data?.ipAddress || '-' }}</p>
-          <p><strong>Date:</strong> {{ modal.data?.date || '-' }}</p>
-          <p><strong>Time:</strong> {{ modal.data?.time || '-' }}</p>
-          <p><strong>Status:</strong> {{ modal.data?.status || '-' }}</p>
+        <div v-if="modal.data?.answers?.length">
+          <a-table
+            :columns="modalColumns"
+            :data-source="modal.data.answers"
+            :pagination="false"
+            row-key="id_questions"
+            bordered
+            size="small"
+          />
+        </div>
+        <div v-else>
+          <p>No answers 'Y' for this IP & date.</p>
         </div>
       </template>
     </BaseModal>
@@ -54,8 +61,10 @@ import BaseModal from '@/components/base/BaseModal.vue'
 import { ref, computed, onMounted, watch } from 'vue'
 import { debounce } from 'lodash-es'
 import { useTabelAnswersStore } from '@/stores/tabelAnswers'
+import { useAnswersStore } from '@/stores/answers'
 
 const machineStore = useTabelAnswersStore()
+const answersStore = useAnswersStore()
 const loading = ref(false)
 
 const pagination = computed(() => ({
@@ -99,6 +108,30 @@ const columns = [
   },
 ]
 
+const modalColumns = [
+  {
+    title: 'Questions',
+    dataIndex: 'question_text',
+    key: 'question_text',
+    ellipsis: false, // jangan di-truncate
+    customCell: () => ({
+      style: { whiteSpace: 'normal', wordBreak: 'break-word' },
+    }),
+  },
+  {
+    title: 'Answers',
+    dataIndex: 'answer',
+    key: 'answer',
+    width: 120,
+    align: 'center',
+    customRender: ({ text }) => {
+      if (text === 'Y') return 'Ya'
+      if (text === 'N') return 'Tidak'
+      return text
+    },
+  },
+]
+
 const onTableChange = async ({ pagination: pag, sorter }) => {
   machineStore.filter.sortBy = sorter.field
   machineStore.filter.order = sorter.order === 'ascend' ? 'asc' : 'desc'
@@ -123,6 +156,8 @@ watch(
 onMounted(async () => {
   loading.value = true
   await machineStore.get()
+  await answersStore.fetchAnswers()
+  await answersStore.fetchQuestions()
   loading.value = false
 })
 
@@ -132,10 +167,37 @@ const modal = ref({
   data: null, // data baris yang diklik
 })
 
-const handleAction = (record = null) => {
+const handleAction = async (record = null) => {
   modal.value.visible = true
   modal.value.title = 'Major Alert'
-  modal.value.data = record
+
+  // default modal data
+  modal.value.data = {
+    ...record,
+    answers: [],
+  }
+
+  // Filter jawaban 'Y' untuk IP dan tanggal yang sama
+  const filteredAnswers = answersStore.answers
+    .filter(
+      a =>
+        a.ipAddress === record.ipAddress &&
+        a.createdAt.slice(0, 10) === record.date &&
+        a.answer === 'Y',
+    )
+    .map(a => {
+      // cari question_text
+      const q = answersStore.questions.find(
+        q => q.id_questions === a.id_questions,
+      )
+      return {
+        ...a,
+        question_text: q ? q.question_text : 'Unknown question',
+      }
+    })
+
+  modal.value.data.answers = filteredAnswers
+  console.log('Filtered answers:', filteredAnswers)
 }
 
 const handleClose = () => {
