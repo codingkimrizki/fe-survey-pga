@@ -7,7 +7,7 @@ services:
     container_name: iot-survey-pga-fe
     restart: always
     ports:
-      - 4182:80
+      - 4183:80
     env_file:
       - .env
     environment:
