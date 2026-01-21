@@ -2,7 +2,9 @@
   <a-dropdown placement="bottomRight" :trigger="['hover']" arrow>
     <a-badge :count="store.countNotification">
       <a-button type="dashed" shape="circle">
-        <MailOutlined />
+        <span class="items-center">
+          <MailOutlined />
+        </span>
       </a-button>
     </a-badge>
     <template #overlay>

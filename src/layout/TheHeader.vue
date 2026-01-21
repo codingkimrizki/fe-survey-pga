@@ -38,7 +38,10 @@
 
         <a-dropdown>
           <a-button type="dashed" v-show="!isMobile">
-            <UserOutlined /> {{ capitalizeEachWord(authStore.user?.name) }}
+            <span class="inline-flex items-center gap-2">
+              <UserOutlined />
+              {{ capitalizeEachWord(authStore.user?.name) }}
+            </span>
           </a-button>
           <!-- Show only icon on mobile -->
           <template #overlay>
