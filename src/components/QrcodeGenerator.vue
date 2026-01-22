@@ -1,6 +1,6 @@
 <template>
   <a-row
-    class="flex flex-col items-center justify-center min-h-screen px-4 py-6"
+    class="flex flex-col items-center justify-center min-h-screen px-4 py-8"
     :class="{ dark: isDark }"
     :style="{
       backgroundColor: 'var(--content-bg)',

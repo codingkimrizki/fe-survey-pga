@@ -72,6 +72,15 @@
             <LockOutlined />
           </a-button>
         </a-tooltip>
+        <a-tooltip title="Survey Form" placement="bottom">
+          <a-button
+            shape="circle"
+            @click="router.push('/survey-form')"
+            size="large"
+          >
+            <MailOutlined />
+          </a-button>
+        </a-tooltip>
       </a-flex>
     </a-card>
   </a-flex>
@@ -81,7 +90,11 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import { UserAddOutlined, LockOutlined } from '@ant-design/icons-vue'
+import {
+  UserAddOutlined,
+  LockOutlined,
+  MailOutlined,
+} from '@ant-design/icons-vue'
 import router from '@/router'
 import LogoTitleApp from '@/components/LogoTitleApp.vue'
 const authStore = useAuthStore()
