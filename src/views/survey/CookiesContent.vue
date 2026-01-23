@@ -45,23 +45,93 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import axios from 'axios'
 
 const emit = defineEmits(['close', 'accepted'])
 
 const emitClose = () => {
   emit('close')
 }
-
 const isMobile = ref(false)
-
 const checkIsMobile = () => {
   isMobile.value = window.innerWidth < 640
 }
 
-const handleAccept = () => {
+// geolocation
+const latitude = ref(null)
+const longitude = ref(null)
+const locationSource = ref(null)
+const city = ref('')
+const region = ref('')
+const country = ref('')
+
+const handleAccept = async () => {
+  // <--- tambahin async di sini
   localStorage.setItem('cookie_consent', 'accepted')
   emit('accepted')
-  emit('close')
+
+  // coba ambil GPS
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async position => {
+        // <--- ini tetap async, karena ada await di sini
+        latitude.value = position.coords.latitude
+        longitude.value = position.coords.longitude
+        locationSource.value = 'gps'
+
+        // kirim ke backend
+        await axios.post('/submit-location', {
+          latitude: latitude.value,
+          longitude: longitude.value,
+          location_source: locationSource.value,
+        })
+        console.log('Location submitted with GPS!')
+      },
+      async () => {
+        // fallback Geo IP
+        locationSource.value = 'ip'
+        const ipRes = await axios.post('http://localhost:5000/geo-ip', {
+          ip: null,
+        })
+        latitude.value = ipRes.data.latitude
+        longitude.value = ipRes.data.longitude
+        city.value = ipRes.data.city
+        region.value = ipRes.data.region
+        country.value = ipRes.data.country
+
+        await axios.post('/submit-location', {
+          latitude: latitude.value,
+          longitude: longitude.value,
+          city: city.value,
+          region: region.value,
+          country: country.value,
+          location_source: locationSource.value,
+        })
+        console.log('Location submitted with Geo IP fallback!')
+      },
+    )
+  } else {
+    console.log('Browser tidak support GPS, fallback ke Geo IP')
+    locationSource.value = 'ip'
+    const ipRes = await axios.post('http://localhost:5000/geo-ip', { ip: null })
+    latitude.value = ipRes.data.latitude
+    longitude.value = ipRes.data.longitude
+    city.value = ipRes.data.city
+    region.value = ipRes.data.region
+    country.value = ipRes.data.country
+
+    await axios.post('/submit-location', {
+      latitude: latitude.value,
+      longitude: longitude.value,
+      city: city.value,
+      region: region.value,
+      country: country.value,
+      location_source: locationSource.value,
+    })
+    console.log('Location submitted with Geo IP fallback!')
+  }
+
+  emitClose()
 }
 
 const handleDecline = () => {

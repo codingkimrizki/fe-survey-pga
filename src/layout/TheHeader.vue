@@ -28,6 +28,8 @@
 
       <!-- Right section - Translate, Date, and User Menu -->
       <a-flex justify="flex-end" gap="middle" align="center">
+        <BadgeNotification />
+
         <AppNotification v-if="!isMobile" />
 
         <MenuOutlined
@@ -82,6 +84,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useDrawerStore } from '@/stores/drawer'
 import { capitalizeEachWord } from '@/utils/capitalizeEachWord'
 import AppNotification from '@/components/AppNotification.vue'
+import BadgeNotification from '@/components/BadgeNotification.vue'
 
 // User data
 const siderStore = useSiderStore()
