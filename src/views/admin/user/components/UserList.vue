@@ -9,6 +9,15 @@
     :scroll="{ y: 'calc(100vh - 450px)', x: 'max-content' }"
     @change="onTableChange"
   >
+    <!--FORM REGISTER-->
+    <template #right-search>
+      <a-tooltip title="Register" placement="bottom">
+        <a-button shape="circle" @click="router.push('/register')" size="large">
+          <UserAddOutlined />
+        </a-button>
+      </a-tooltip>
+    </template>
+
     <template #name="{ text }">
       <a-space size="small">
         <UserOutlined />
@@ -59,6 +68,10 @@ import { UserOutlined } from '@ant-design/icons-vue'
 import BaseTable from '@/components/base/BaseTable.vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import UserForm from './UserForm.vue'
+import { useRouter } from 'vue-router'
+
+// router
+const router = useRouter()
 
 const userStore = useUserStore()
 const loading = ref(false)

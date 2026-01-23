@@ -11,11 +11,9 @@
           <SearchOutlined />
         </template>
       </a-input>
-      <a-tooltip title="Register" placement="bottom" size="small" align="end">
-        <a-button shape="circle" @click="router.push('/register')" size="large">
-          <UserAddOutlined />
-        </a-button>
-      </a-tooltip>
+      <a-space size="small" align="end">
+        <slot name="right-search" />
+      </a-space>
     </a-flex>
 
     <!-- Table -->
@@ -50,8 +48,7 @@
 <script setup>
 import { formatDateTime } from '@/utils/formatDateTime'
 import { formatThousandSeparator } from '@/utils/formatterInputNumber'
-import { SearchOutlined, UserAddOutlined } from '@ant-design/icons-vue'
-import { useRouter } from 'vue-router'
+import { SearchOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
 // Props
@@ -65,9 +62,6 @@ defineProps({
   addAction: { type: Boolean, default: false },
   bordered: { type: Boolean, default: false },
 })
-
-// router
-const router = useRouter()
 
 // Search model
 const search = defineModel('search', { type: String })
