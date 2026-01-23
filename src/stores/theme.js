@@ -4,7 +4,7 @@ import { theme } from 'ant-design-vue'
 
 export const useThemeStore = defineStore('theme', {
   state: () => ({
-    isDarkMode: true,
+    isDarkMode: false,
     isFluid: true,
     defaultColorPrimary: '#264D8E',
     colorPrimary: '#264D8E',

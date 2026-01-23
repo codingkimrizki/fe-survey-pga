@@ -4,9 +4,10 @@
   >
     <div class="w-full max-w-xl">
       <!-- TOP LABEL -->
-      <div class="mb-4">
+      <a-flex justify="flex-start" wrap="wrap" style="margin-bottom: 1rem">
         <a-tag color="blue">Ethics & Compliance</a-tag>
-      </div>
+        <ThemeToggle />
+      </a-flex>
 
       <!-- TITLE -->
       <a-typography-title :level="2" class="!mb-1">
@@ -77,7 +78,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import CookiesContent from './CookiesContent.vue'
 import { useRouter } from 'vue-router'
-
+import ThemeToggle from '@/components/ThemeToggle.vue'
 const router = useRouter()
 
 const startSurvey = () => {

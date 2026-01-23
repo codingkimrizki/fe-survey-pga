@@ -52,7 +52,7 @@
 
       <!-- ACTION -->
       <div class="mt-8">
-        <a-button
+        <!-- <a-button
           type="primary"
           ghost
           size="large"
@@ -60,7 +60,7 @@
           @click="restartSurvey"
         >
           Submit another response
-        </a-button>
+        </a-button> -->
 
         <div v-if="isMobile" class="mt-3">
           <a-typography-text type="secondary" class="text-xs">
@@ -74,17 +74,17 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { CircleCheckBig } from 'lucide-vue-next'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 
-const router = useRouter()
+// const router = useRouter()
 
-const restartSurvey = () => {
-  // optional: reset state / localStorage survey
-  // localStorage.removeItem('survey_answers')
+// const restartSurvey = () => {
+//   // optional: reset state / localStorage survey
+//   // localStorage.removeItem('survey_answers')
 
-  // redirect ke welcome page
-  router.push({ name: 'Start Survey' })
-}
+//   // redirect ke welcome page
+//   router.push({ name: 'Start Survey' })
+// }
 
 const isMobile = ref(false)
 

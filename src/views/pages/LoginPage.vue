@@ -54,15 +54,6 @@
         </a-form-item>
       </a-form>
       <a-flex justify="center" gap="small" align="center">
-        <a-tooltip title="Register" placement="bottom">
-          <a-button
-            shape="circle"
-            @click="router.push('/register')"
-            size="large"
-          >
-            <UserAddOutlined />
-          </a-button>
-        </a-tooltip>
         <a-tooltip title="Forgot Password" placement="bottom">
           <a-button
             shape="circle"
@@ -90,11 +81,7 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import {
-  UserAddOutlined,
-  LockOutlined,
-  MailOutlined,
-} from '@ant-design/icons-vue'
+import { LockOutlined, MailOutlined } from '@ant-design/icons-vue'
 import router from '@/router'
 import LogoTitleApp from '@/components/LogoTitleApp.vue'
 const authStore = useAuthStore()

@@ -92,8 +92,12 @@
         </a-form-item>
       </a-form>
       <a-flex justify="center" align="center" gap="small">
-        <a-tooltip title="Back to login" placement="bottom">
-          <a-button shape="circle" size="large" @click="router.push('/login')">
+        <a-tooltip title="Back to User Management" placement="bottom">
+          <a-button
+            shape="circle"
+            size="large"
+            @click="router.push('/user-management')"
+          >
             <UndoOutlined />
           </a-button>
         </a-tooltip>

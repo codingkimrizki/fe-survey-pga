@@ -11,9 +11,11 @@
           <SearchOutlined />
         </template>
       </a-input>
-      <a-space size="small" align="end">
-        <slot name="additional" />
-      </a-space>
+      <a-tooltip title="Register" placement="bottom" size="small" align="end">
+        <a-button shape="circle" @click="router.push('/register')" size="large">
+          <UserAddOutlined />
+        </a-button>
+      </a-tooltip>
     </a-flex>
 
     <!-- Table -->
@@ -48,8 +50,10 @@
 <script setup>
 import { formatDateTime } from '@/utils/formatDateTime'
 import { formatThousandSeparator } from '@/utils/formatterInputNumber'
-import { SearchOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, UserAddOutlined } from '@ant-design/icons-vue'
+import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
+
 // Props
 defineProps({
   columns: { type: Array, required: true },
@@ -62,11 +66,14 @@ defineProps({
   bordered: { type: Boolean, default: false },
 })
 
+// router
+const router = useRouter()
+
 // Search model
 const search = defineModel('search', { type: String })
 
 // Emit
-const emits = defineEmits(['change', 'add'])
+const emits = defineEmits(['change'])
 
 // Emit saat ada perubahan di tabel (pagination / sorter / filter)
 const handleTableChange = (pagination, filters, sorter) => {

@@ -4,9 +4,10 @@
   >
     <div class="w-full max-w-3xl">
       <!-- HEADER -->
-      <div class="mb-4">
+      <a-flex justify="flex-start" wrap="wrap" style="margin-bottom: 1rem">
         <a-tag color="blue">Ethics & Compliance</a-tag>
-      </div>
+        <ThemeToggle />
+      </a-flex>
 
       <!-- TITLE -->
       <a-typography-title :level="2" class="!mb-1">
@@ -32,7 +33,7 @@
             :id="`question-${q.id_questions}`"
             class="p-4 rounded-xl space-y-4"
             :class="[
-              'bg-[#fafafa]',
+              'bg-[var(--content-bg)]',
               errors[q.id_questions]
                 ? 'border-2 border-red-500'
                 : 'border border-transparent',
@@ -40,17 +41,17 @@
           >
             <div class="flex w-full">
               <!-- Nomor -->
-              <span class="font-semibold text-gray-700 w-6">
+              <a-typography-paragraph class="font-semibold text-gray-700 w-6">
                 {{ index + 1 }}.
-              </span>
+              </a-typography-paragraph>
 
               <div class="flex flex-col flex-1">
                 <!-- Pertanyaan -->
-                <div class="text-gray-800 text-justify">
+                <a-typography-paragraph class="text-gray-800 text-justify">
                   {{ q.question_text }}
-                </div>
+                </a-typography-paragraph>
 
-                <div class="mt-2 w-full">
+                <div class="w-full">
                   <!-- Yes/No (required) -->
                   <a-radio-group
                     v-if="q.question_type === 'Y/N'"
@@ -58,8 +59,8 @@
                     :button-style="'solid'"
                     class="flex gap-4"
                   >
-                    <a-radio-button value="Y">Yes</a-radio-button>
-                    <a-radio-button value="N">No</a-radio-button>
+                    <a-radio value="Y">Yes</a-radio>
+                    <a-radio value="N">No</a-radio>
                   </a-radio-group>
 
                   <!-- Suggestion (optional) -->
@@ -103,6 +104,7 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/axios/interceptor'
 import { message } from 'ant-design-vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 
 const router = useRouter()
 const questions = ref([])
