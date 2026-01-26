@@ -60,14 +60,6 @@ export const useTabelAnswersStore = defineStore('tabelAnswers', {
             }
           })
 
-          // convert ke array untuk table
-          // this.machineList = Object.values(grouped).map((item, index) => ({
-          //   no: index + 1,
-          //   ipAddress: item.ipAddress,
-          //   date: item.date,
-          //   time: item.lastTime,
-          //   status: item.status,
-          // }))
           this.machineList = Object.values(grouped).map((item, index) => {
             // gabungkan date + lastTime jadi Date object UTC
             const utcDate = new Date(item.date + 'T' + item.lastTime + 'Z') // 'Z' = UTC
