@@ -55,8 +55,6 @@ const checkIsMobile = () => (isMobile.value = window.innerWidth < 640)
 
 // geolocation
 const locationSource = ref(null)
-const city = ref('') // optional
-const region = ref('') // optional
 
 // helper: ambil GPS sebagai Promise
 const getGPS = () => {
@@ -64,8 +62,8 @@ const getGPS = () => {
     if (!navigator.geolocation) return reject('No GPS support')
 
     navigator.geolocation.getCurrentPosition(
-      position => resolve(position),
-      err => reject(err),
+      () => resolve(),
+      () => reject(),
     )
   })
 }
@@ -74,8 +72,6 @@ const getGPS = () => {
 const submitLocation = async () => {
   try {
     await api.post('/userlocation/submit', {
-      city: city.value,
-      region: region.value,
       location_source: locationSource.value,
     })
     console.log('Location submitted successfully!')
