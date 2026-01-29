@@ -1,42 +1,47 @@
 pipeline {
-    agent any
+    agent {
+        label "${params.DEPLOY_ENV == 'prod' ? 'production' : 'staging'}"
+    }
 
-    environment {
-        PROJECT_DIR = '/srv/workspace/iot-molding/fe-iot-molding'
+    parameters {
+        choice(name: 'DEPLOY_ENV', choices: ['dev', 'staging', 'prod'], description: 'Deployment environment')
+    }
+
+    environment{
+        PROJECT_DIR = "${params.DEPLOY_ENV == 'prod' ? '/srv/workspace/survey' : (params.DEPLOY_ENV == 'staging' ? '/home/iotpe/workspace/survey-pga/fe-survey-pga' : '/tmp/...')}"
+
+        COMPOSE_FILE = "${params.DEPLOY_ENV == 'prod' ? 'docker-compose.yaml' : (params.DEPLOY_ENV == 'staging' ? 'docker-compose.yaml' : 'docker-compose.dev.yaml')}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from repository
-                dir(env.PROJECT_DIR) {
-                    echo "Checkout code from repository"
-                    checkout scm
+                checkout scm
+            }
+        }
+
+        stage('Sync Code to Server Dir') {
+            steps {
+                sh """
+                    mkdir -p ${PROJECT_DIR}
+
+                    rsync -av --delete ${WORKSPACE}/ ${PROJECT_DIR}/
+                """
+            }
+        }
+
+        stage('Stop Docker Container') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh "docker compose -f ${COMPOSE_FILE} down || true"  
                 }
             }
         }
 
-        stage('Setup Environment') {
+        stage('Build & Start Docker Container') {
             steps {
-                script {
-                    // Get env file from credentials copy to project directory
-                    dir(env.PROJECT_DIR) {
-                        withCredentials([file(credentialsId: 'iot-molding-fe-env', variable: 'ENV_CONTENT')]) {
-                            sh 'cp $ENV_CONTENT .env'
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                script {
-                    // Build and run container service
-                    dir(env.PROJECT_DIR) {
-                        echo 'Building and running container service...'
-                        sh "docker compose up -d --build"
-                    }
+                dir("${PROJECT_DIR}") {
+                    sh "docker compose -f ${COMPOSE_FILE} up --build -d"
                 }
             }
         }
@@ -45,7 +50,6 @@ pipeline {
             steps {
                 dir(env.PROJECT_DIR) {
                     script {
-                        // Remove dangling images
                         echo 'Removing dangling images...'
                         sh 'docker image prune -f || true'
                         echo 'Dangling images cleanup complete...'
@@ -57,10 +61,18 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment success!'
+            emailext(
+                subject: "[SUCCESS] Jenkins Build ${currentBuild.fullDisplayName}",
+                body: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} finished successfully!",
+                to: "ariz.muajianisan.2q@hirose-gl.com, rian.kurniawan.6n@hirose-gl.com, rizki.ardianto.9b@hirose-gl.com"
+            )
         }
         failure {
-            echo 'Deployment failed. Please check logs.'
+            emailext(
+                subject: "[FAILED] Jenkins Build ${currentBuild.fullDisplayName}",
+                body: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} failed!",
+                to: "ariz.muajianisan.2q@hirose-gl.com, rian.kurniawan.6n@hirose-gl.com, rizki.ardianto.9b@hirose-gl.com"
+            )
         }
-    }
+    } 
 }

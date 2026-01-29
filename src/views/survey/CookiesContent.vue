@@ -45,7 +45,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, defineExpose } from 'vue'
-import api from '@/axios/interceptor'
+// import api from '@/axios/interceptor'
 
 const emit = defineEmits(['close', 'accepted'])
 const emitClose = () => emit('close')
@@ -53,48 +53,48 @@ const emitClose = () => emit('close')
 const isMobile = ref(false)
 const checkIsMobile = () => (isMobile.value = window.innerWidth < 640)
 
-// geolocation
-const locationSource = ref(null)
+// // geolocation
+// const locationSource = ref(null)
 
 // helper: ambil GPS sebagai Promise
-const getGPS = () => {
-  return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) return reject('No GPS support')
+// const getGPS = () => {
+//   return new Promise((resolve, reject) => {
+//     if (!navigator.geolocation) return reject('No GPS support')
 
-    navigator.geolocation.getCurrentPosition(
-      () => resolve(),
-      () => reject(),
-    )
-  })
-}
+//     navigator.geolocation.getCurrentPosition(
+//       () => resolve(),
+//       () => reject(),
+//     )
+//   })
+// }
 
 // submit ke backend
-const submitLocation = async () => {
-  try {
-    await api.post('/userlocation/submit', {
-      location_source: locationSource.value,
-    })
-    console.log('Location submitted successfully!')
-  } catch (err) {
-    console.error('Failed to submit location', err)
-  }
-}
+// const submitLocation = async () => {
+//   try {
+//     await api.post('/userlocation/submit', {
+//       location_source: locationSource.value,
+//     })
+//     console.log('Location submitted successfully!')
+//   } catch (err) {
+//     console.error('Failed to submit location', err)
+//   }
+// }
 
 // handle tombol Setuju
 const handleAccept = async () => {
   localStorage.setItem('cookie_consent', 'accepted')
   emit('accepted')
 
-  try {
-    await getGPS()
-    locationSource.value = 'gps'
-    console.log('GPS available')
-  } catch {
-    locationSource.value = 'ip'
-    console.log('Fallback to IP')
-  }
+  // try {
+  //   await getGPS()
+  //   locationSource.value = 'gps'
+  //   console.log('GPS available')
+  // } catch {
+  //   locationSource.value = 'ip'
+  //   console.log('Fallback to IP')
+  // }
 
-  await submitLocation()
+  // await submitLocation()
   emitClose()
 }
 
