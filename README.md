@@ -4,13 +4,9 @@ A modern, responsive Vue 3 frontend application for monitoring and managing manu
 
 ## 🚀 Features
 
-- **Real-time Monitoring**: Live data visualization from manufacturing equipment using MQTT
-- **Multi-dashboard Views**: Machine, Kanagata, and Operator dashboards with specific KPIs
 - **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
 - **Dark/Light Theme**: Toggle between dark and light themes with customizable primary colors
-- **Role-based Access Control**: Different permissions for admin, staff, and user roles
-- **Data Visualization**: Charts and graphs powered by Vue-ECharts for performance insights
-- **MQTT Integration**: Real-time communication with manufacturing equipment
+- **Role-based Access Control**: Different permissions for admin, and user roles
 - **Ant Design Vue**: Professional UI components for consistent user experience
 - **State Management**: Pinia for efficient state management with persistence
 
@@ -21,7 +17,6 @@ A modern, responsive Vue 3 frontend application for monitoring and managing manu
 - **UI Library**: Ant Design Vue
 - **Routing**: Vue Router
 - **Charts**: Vue-ECharts
-- **MQTT Client**: Paho MQTT for real-time communication
 - **Build Tool**: Vite
 - **Code Quality**: ESLint & Prettier
 
@@ -33,7 +28,6 @@ Before you begin, ensure you have the following installed:
 - **npm** or **yarn** package manager
 - **Git** for version control
 - Access to the backend API server
-- MQTT broker for real-time data
 
 ## 📦 Installation
 
@@ -58,7 +52,7 @@ Create a `.env` file in the root directory with the following environment variab
 
 ```env
 # API Configuration
-VITE_API_BASE_URL=http://localhost:5000/api
+VITE_API_BASE_URL=http://localhost:3000/api
 VITE_API_TIMEOUT=30000
 
 # MQTT Configuration
