@@ -4,17 +4,9 @@
   >
     <div class="w-full max-w-3xl">
       <!-- HEADER -->
-      <a-flex
-        justify="flex-between"
-        align="center"
-        wrap="wrap"
-        style="margin-bottom: 1rem"
-      >
+      <a-flex justify="flex-start" wrap="wrap" style="margin-bottom: 1rem">
         <a-tag color="blue">Ethics & Compliance</a-tag>
-        <a-flex align="center" gap="12">
-          <ThemeToggle />
-          <TranslateGoogle />
-        </a-flex>
+        <ThemeToggle />
       </a-flex>
 
       <!-- TITLE -->
@@ -113,7 +105,6 @@ import { useRouter } from 'vue-router'
 import api from '@/axios/interceptor'
 import { message } from 'ant-design-vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import TranslateGoogle from '@/components/TranslateGoogle.vue'
 
 const router = useRouter()
 const questions = ref([])
