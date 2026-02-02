@@ -4,9 +4,17 @@
   >
     <div class="w-full max-w-xl">
       <!-- TOP LABEL -->
-      <a-flex justify="flex-start" wrap="wrap" style="margin-bottom: 1rem">
+      <a-flex
+        justify="flex-between"
+        align="center"
+        wrap="wrap"
+        style="margin-bottom: 1rem"
+      >
         <a-tag color="blue">Ethics & Compliance</a-tag>
-        <ThemeToggle />
+        <a-flex align="center" gap="12">
+          <ThemeToggle />
+          <TranslateGoogle />
+        </a-flex>
       </a-flex>
 
       <!-- TITLE -->
@@ -53,7 +61,7 @@
             :disabled="!hasConsent"
             @click="startSurvey"
           >
-            Mulai Pengisian
+            Mulai
           </a-button>
 
           <CookiesContent
@@ -79,6 +87,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import CookiesContent from './CookiesContent.vue'
 import { useRouter } from 'vue-router'
 import ThemeToggle from '@/components/ThemeToggle.vue'
+import TranslateGoogle from '@/components/TranslateGoogle.vue'
 const router = useRouter()
 
 const startSurvey = () => {

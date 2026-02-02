@@ -4,9 +4,17 @@
   >
     <div class="w-full max-w-3xl">
       <!-- HEADER -->
-      <a-flex justify="flex-start" wrap="wrap" style="margin-bottom: 1rem">
+      <a-flex
+        justify="flex-between"
+        align="center"
+        wrap="wrap"
+        style="margin-bottom: 1rem"
+      >
         <a-tag color="blue">Ethics & Compliance</a-tag>
-        <ThemeToggle />
+        <a-flex align="center" gap="12">
+          <ThemeToggle />
+          <TranslateGoogle />
+        </a-flex>
       </a-flex>
 
       <!-- TITLE -->
@@ -59,8 +67,8 @@
                     :button-style="'solid'"
                     class="flex gap-4"
                   >
-                    <a-radio value="Y">Yes</a-radio>
-                    <a-radio value="N">No</a-radio>
+                    <a-radio value="Y">Ya, Pernah</a-radio>
+                    <a-radio value="N">Tidak</a-radio>
                   </a-radio-group>
 
                   <!-- Suggestion (optional) -->
@@ -105,6 +113,7 @@ import { useRouter } from 'vue-router'
 import api from '@/axios/interceptor'
 import { message } from 'ant-design-vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
+import TranslateGoogle from '@/components/TranslateGoogle.vue'
 
 const router = useRouter()
 const questions = ref([])
